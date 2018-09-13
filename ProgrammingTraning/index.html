@@ -26,6 +26,21 @@ canvas { background: #eee; display: block; margin: 0 auto; }
 		var paddleX = (canvas.width-paddleWidth) / 2;
 		var rightPressed = false;
 		var leftPressed = false;
+		var blockRowCount = 3;
+		var blockColumnCount = 5;
+		var blockWidth = 75;
+		var blockHeight = 20;
+		var blockPadding = 10;
+		var blockOffsetTop = 30;
+		var blockOffsetLeft = 30;
+
+		var blocks = [];
+		for(var c=0; c<blockColumnCount; c++) {
+			blocks[c] = [];
+			for(var r=0; r<blockRowCount; r++) {
+				blocks[c][r] = { x: 0, y: 0 };
+			}
+		}
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -64,10 +79,28 @@ document.addEventListener("keyup", keyUpHandler, false);
 			ctx.closePath();
 		}
 
+		function drawBlocks() {
+			for(var c=0; c<blockColumnCount; c++) {
+				for(var r=0; r<blockRowCount; r++) {
+					var blockX = (c*(blockWidth+blockPadding))+blockOffsetLeft;
+					var blockY = (r*(blockHeight+blockPadding))+blockOffsetTop;
+					blocks[c][r].x = 0;
+					blocks[c][r].y = 0;
+					ctx.beginPath();
+					ctx.rect(blockX, blockY, blockWidth, blockHeight);
+					ctx.fillStyle = "#0095DD";
+					ctx.fill();
+					ctx.closePath();
+				}
+			}
+		}
+
 		function draw() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			drawBall();
 			drawPaddle();
+			drawBlocks();
+
 
 			if(x + dy > canvas.width-ballRadius || x + dx < ballRadius) {
 				dx = -dx;
